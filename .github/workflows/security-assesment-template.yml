@@ -4,7 +4,9 @@ on:
     secrets:
       GITGUARDIAN_API_KEY:
         description: "GitGuardian api key to check hardcoded credentials"
+        required: true
 
+jobs:
   gitguardian-scan:
     name: GitGuardian Scan
     runs-on: [ubuntu-latest]
