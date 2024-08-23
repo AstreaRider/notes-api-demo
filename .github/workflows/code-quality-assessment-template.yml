@@ -12,7 +12,7 @@ on:
         required: true
 jobs:
   code-quality-assesment:
-    name: Code Quality Assesment
+    name: Sonarqube Scan
     runs-on: [self-hosted, notes-api-demo]
     steps:
       - uses: actions/checkout@v4
