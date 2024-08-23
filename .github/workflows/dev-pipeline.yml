@@ -4,12 +4,12 @@ on:
     branches:
       - "dev"
     paths-ignore:
-      - '.github/workflows/**'
+      - ".github/workflows/**"
   pull_request:
     branches:
       - "dev"
     paths-ignore:
-      - '.github/workflows/**'
+      - ".github/workflows/**"
   workflow_dispatch:
 
 jobs:
@@ -19,13 +19,14 @@ jobs:
       SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      
-  security-assesment:
+
+  security-assessment:
+    needs: [code-quality-assessment]
     uses: ./.github/workflows/security-assesment-template.yml
     secrets:
       GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
 
-   build-push-scan:
+  build-push-scan:
     uses: ./.github/workflows/build-scan-push-template.yml
     needs: [security-assessment]
     with:
