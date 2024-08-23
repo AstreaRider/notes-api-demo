@@ -1,32 +1,9 @@
-name: Security assesment for backend
+name: Security assesment
 on:
   workflow_call:
-    inputs:
-      SONAR_HOST_URL:
-        description: "sonarqube host url. exxample http://localhost:9000"
-        required: true
-        type: string
     secrets:
-      SONAR_TOKEN:
-        description: "Sonarqube token to check code quality"
-        required: true
       GITGUARDIAN_API_KEY:
         description: "GitGuardian api key to check hardcoded credentials"
-
-jobs:
-  code-quality-assesment:
-    name: Code Quality Assesment
-    runs-on: [self-hosted, karsajobs]
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: sonarsource/sonarqube-scan-action@master
-        env:
-          SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        with:
-          projectBaseDir: backend
 
   gitguardian-scan:
     name: GitGuardian Scan
@@ -58,7 +35,7 @@ jobs:
       - name: Run Gosec Security Scanner
         uses: securego/gosec@master
         with:
-          args: "-no-fail -fmt sarif -out gosec-results.sarif ./backend/..."
+          args: "-no-fail -fmt sarif -out gosec-results.sarif ./"
       - name: Upload Gosec Report
         uses: actions/upload-artifact@v3
         if: always()
