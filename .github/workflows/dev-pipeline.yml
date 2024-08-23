@@ -22,7 +22,7 @@ jobs:
 
   security-assessment:
     needs: [code-quality-assessment]
-    uses: ./.github/workflows/security-assesment-template.yml
+    uses: ./.github/workflows/security-assessment-template.yml
     secrets:
       GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
 
