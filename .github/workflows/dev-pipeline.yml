@@ -1,0 +1,37 @@
+name: Dev branch pipeline
+on:
+  push:
+    branches:
+      - "dev"
+    paths-ignore:
+      - '.github/workflows/**'
+  pull_request:
+    branches:
+      - "dev"
+    paths-ignore:
+      - '.github/workflows/**'
+  workflow_dispatch:
+
+jobs:
+  code-quality-assessment:
+    uses: ./.github/workflows/code-quality-assessment-template.yml
+    with:
+      SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      
+  security-assesment:
+    uses: ./.github/workflows/security-assesment-template.yml
+    secrets:
+      GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
+
+   build-push-scan:
+    uses: ./.github/workflows/build-scan-push-template.yml
+    needs: [security-assessment]
+    with:
+      CONTAINER_REGISTRY_URL: ${{ vars.CONTAINER_REGISTRY_URL }}
+      CONTAINER_REGISTRY_REPO: ${{ vars.CONTAINER_REGISTRY_REPO }}
+      WORKING_DIRECTORY: ${{ vars.BACKEND_WORKING_DIRECTORY }}
+    secrets:
+      CONTAINER_REGISTRY_USERNAME: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
+      CONTAINER_REGISTRY_PASSWORD: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}

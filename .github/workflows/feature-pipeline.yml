@@ -1,0 +1,26 @@
+name: Feature branch pipeline
+on:
+  push:
+    branches:
+      - "feature/**"
+    paths-ignore:
+      - ".github/workflows/**"
+  pull_request:
+    branches:
+      - "feature/**"
+    paths-ignore:
+      - ".github/workflows/**"
+  workflow_dispatch:
+
+jobs:
+  code-quality-assessment:
+    uses: ./.github/workflows/code-quality-assessment-template.yml
+    with:
+      SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  security-assessment:
+    uses: ./.github/workflows/security-assessment-template.yml
+    secrets:
+      GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}

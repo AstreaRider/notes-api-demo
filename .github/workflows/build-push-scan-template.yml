@@ -10,10 +10,6 @@ on:
         description: "name of your repo or project name in your container registry"
         required: true
         type: string
-      WORKING_DIRECTORY:
-        description: "working directory for your app"
-        required: true
-        type: string
     secrets:
       CONTAINER_REGISTRY_USERNAME:
         description: "your container registry username"
@@ -25,7 +21,7 @@ env:
   IMAGE: ${{ inputs.CONTAINER_REGISTRY_URL }}/${{ secrets.CONTAINER_REGISTRY_USERNAME }}/${{ inputs.CONTAINER_REGISTRY_REPO }}
 jobs:
   build-push-image:
-    runs-on: [self-hosted, karsajobs]
+    runs-on: [self-hosted, notes-api-demo]
     outputs:
       build_id: ${{ steps.prep.outputs.BUILD_ID }}
       latest_id: ${{ steps.prep.outputs.LATEST_ID }}
@@ -50,7 +46,6 @@ jobs:
         if: success()
         uses: docker/build-push-action@v3
         with:
-          context: ./${{ inputs.WORKING_DIRECTORY }}
           push: true
           tags: |
             ${{ env.IMAGE }}:${{ steps.prep.outputs.BUILD_ID }}
