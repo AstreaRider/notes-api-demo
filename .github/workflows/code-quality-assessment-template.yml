@@ -1,0 +1,24 @@
+name: Code quality check assesment
+on:
+  workflow_call:
+    inputs:
+      SONAR_HOST_URL:
+        description: "sonarqube host url. exxample http://localhost:9000"
+        required: true
+        type: string
+    secrets:
+      SONAR_TOKEN:
+        description: "Sonarqube token to check code quality"
+        required: true
+jobs:
+  code-quality-assesment:
+    name: Code Quality Assesment
+    runs-on: [self-hosted, notes-api-demo]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
