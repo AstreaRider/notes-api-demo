@@ -27,7 +27,7 @@ jobs:
       GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
 
   build-push-scan:
-    uses: ./.github/workflows/build-scan-push-template.yml
+    uses: ./.github/workflows/build-push-scan-template.yml
     needs: [security-assessment]
     with:
       CONTAINER_REGISTRY_URL: ${{ vars.CONTAINER_REGISTRY_URL }}
