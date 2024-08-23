@@ -1,0 +1,67 @@
+name: Security assesment for backend
+on:
+  workflow_call:
+    inputs:
+      SONAR_HOST_URL:
+        description: "sonarqube host url. exxample http://localhost:9000"
+        required: true
+        type: string
+    secrets:
+      SONAR_TOKEN:
+        description: "Sonarqube token to check code quality"
+        required: true
+      GITGUARDIAN_API_KEY:
+        description: "GitGuardian api key to check hardcoded credentials"
+
+jobs:
+  code-quality-assesment:
+    name: Code Quality Assesment
+    runs-on: [self-hosted, karsajobs]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: sonarsource/sonarqube-scan-action@master
+        env:
+          SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        with:
+          projectBaseDir: backend
+
+  gitguardian-scan:
+    name: GitGuardian Scan
+    runs-on: [ubuntu-latest]
+    needs: code-quality-assesment
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Run GitGuardian Scan
+        uses: GitGuardian/ggshield/actions/secret@v1.29.0
+        env:
+          GITHUB_PUSH_BEFORE_SHA: ${{ github.event.before }}
+          GITHUB_PUSH_BASE_SHA: ${{ github.event.base }}
+          GITHUB_PULL_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          GITHUB_DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
+
+  gosec-scan:
+    name: Gosec Security Scan
+    runs-on: [ubuntu-latest]
+    needs: code-quality-assesment
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Run Gosec Security Scanner
+        uses: securego/gosec@master
+        with:
+          args: "-no-fail -fmt sarif -out gosec-results.sarif ./backend/..."
+      - name: Upload Gosec Report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: gosec-results
+          path: gosec-results.sarif
