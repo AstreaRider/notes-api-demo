@@ -10,7 +10,6 @@ jobs:
   gitguardian-scan:
     name: GitGuardian Scan
     runs-on: [ubuntu-latest]
-    needs: code-quality-assesment
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
