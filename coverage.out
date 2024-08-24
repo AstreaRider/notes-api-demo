@@ -1,0 +1,9 @@
+mode: set
+github.com/AstreaRider/notes-api-demo/config/config.go:10.32,12.16 2 1
+github.com/AstreaRider/notes-api-demo/config/config.go:12.16,14.3 1 1
+github.com/AstreaRider/notes-api-demo/config/config.go:16.2,16.23 1 1
+github.com/AstreaRider/notes-api-demo/database/connect.go:15.19,20.16 4 1
+github.com/AstreaRider/notes-api-demo/database/connect.go:20.16,22.3 1 0
+github.com/AstreaRider/notes-api-demo/database/connect.go:24.2,28.16 3 1
+github.com/AstreaRider/notes-api-demo/database/connect.go:28.16,29.38 1 0
+github.com/AstreaRider/notes-api-demo/database/connect.go:32.2,32.46 1 1
