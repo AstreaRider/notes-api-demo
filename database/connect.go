@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/AstreaRider/notes-api-demo/config"
+	"github.com/AstreaRider/notes-api-demo/internal/model"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -30,4 +31,7 @@ func ConnectDB()  {
 	}
 
 	fmt.Println("Connection opened to database")
+
+	DB.AutoMigrate(&model.Note{})
+	fmt.Println("Database Migrated")
 }
