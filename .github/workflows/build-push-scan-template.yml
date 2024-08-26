@@ -2,9 +2,6 @@ name: Build, push, and scan images
 on:
   workflow_call:
     inputs:
-      CONTAINER_REGISTRY_URL:
-        description: "your container registry url, example: hub.docker.com"
-        type: string
       CONTAINER_REGISTRY_REPO:
         description: "name of your repo or project name in your container registry"
         required: true
@@ -17,10 +14,10 @@ on:
         description: "your container registry password"
         required: true
 env:
-  IMAGE: ${{ inputs.CONTAINER_REGISTRY_URL }}/${{ secrets.CONTAINER_REGISTRY_USERNAME }}/${{ inputs.CONTAINER_REGISTRY_REPO }}
+  IMAGE: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}/${{ inputs.CONTAINER_REGISTRY_REPO }}
 jobs:
   build-push-image:
-    name: Build, push, scan an image
+    name: Build and push an image
     runs-on: [self-hosted, notes-api-demo]
     outputs:
       build_id: ${{ steps.prep.outputs.BUILD_ID }}
@@ -58,6 +55,7 @@ jobs:
           docker system prune --force
 
   scan-image:
+    name: Scan an image vulnerabilities
     runs-on: [self-hosted, karsajobs]
     needs: build-push-image
     steps:
