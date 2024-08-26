@@ -4,7 +4,6 @@ on:
     inputs:
       CONTAINER_REGISTRY_URL:
         description: "your container registry url, example: hub.docker.com"
-        required: true
         type: string
       CONTAINER_REGISTRY_REPO:
         description: "name of your repo or project name in your container registry"
@@ -21,6 +20,7 @@ env:
   IMAGE: ${{ inputs.CONTAINER_REGISTRY_URL }}/${{ secrets.CONTAINER_REGISTRY_USERNAME }}/${{ inputs.CONTAINER_REGISTRY_REPO }}
 jobs:
   build-push-image:
+    name: Build, push, scan an image
     runs-on: [self-hosted, notes-api-demo]
     outputs:
       build_id: ${{ steps.prep.outputs.BUILD_ID }}
