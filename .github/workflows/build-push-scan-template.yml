@@ -56,7 +56,7 @@ jobs:
 
   scan-image:
     name: Scan an image vulnerabilities
-    runs-on: [self-hosted, karsajobs]
+    runs-on: [self-hosted, notes-api-demo]
     needs: build-push-image
     steps:
       - name: Docker Scout
