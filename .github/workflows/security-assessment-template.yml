@@ -1,6 +1,5 @@
 name: Security assesment
 on:
-  workflow_dispatch:
   workflow_call:
     secrets:
       GITGUARDIAN_API_KEY:

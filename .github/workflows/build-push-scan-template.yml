@@ -1,6 +1,5 @@
 name: Build, push, and scan images
 on:
-  workflow_dispatch:
   workflow_call:
     inputs:
       CONTAINER_REGISTRY_URL:

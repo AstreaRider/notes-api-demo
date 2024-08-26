@@ -1,6 +1,5 @@
 name: Code quality check assesment
 on:
-  workflow_dispatch:
   workflow_call:
     inputs:
       SONAR_HOST_URL:
