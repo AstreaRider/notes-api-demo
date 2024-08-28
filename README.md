@@ -1,6 +1,6 @@
 # notes-api-demo
 
-This is simple notes api for demo purpose.\
+This simple notes API is used for CI pipeline demo purpose.\
 Copied from this tutorial: https://dev.to/percoguru/getting-started-with-apis-in-golang-feat-fiber-and-gorm-2n34
 
 ## Installation
