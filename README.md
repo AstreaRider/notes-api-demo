@@ -28,6 +28,7 @@ remember, database environtment in the docker-composeyml file must be the same a
 
 ```
 go mod download
+go install github.com/cespare/reflex@latest # make sure you have raflex
 make build
 make run
 ```
