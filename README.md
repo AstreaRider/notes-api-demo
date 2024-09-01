@@ -41,7 +41,7 @@ docker run -d -p 3000:3000 \
     -e DB_NAME=fiber-app \
     -e DB_USER=postgres \
     -e DB_PASSWORD=postgres \
-    -e DB_PORT=5432 notes-api-demo:v1
+    -e DB_PORT=5432 notes-api-demo:latest
 
 ```
 
