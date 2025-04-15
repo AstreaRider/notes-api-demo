@@ -21,7 +21,7 @@ jobs:
  
   SAST-assessment:
     needs: [security-assessment]
-    uses: astrearider/gh-workflows/.github/workflows/SAST-assessment.yml
+    uses: astrearider/gh-workflows/.github/workflows/SAST-assessment.yml@master
     with:
       SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
     secrets:
@@ -29,7 +29,7 @@ jobs:
 
   build-image:
     needs: [SAST-assessment]
-    uses: astrearider/gh-workflows/.github/workflows/build-image.yml
+    uses: astrearider/gh-workflows/.github/workflows/build-image.yml@master
     with:
       CONTAINER_REGISTRY_REPO: ${{ vars.CONTAINER_REGISTRY_REPO }}
       CONTAINER_LATEST_TAG: ${{ vars.CONTAINER_LATEST_TAG }}
