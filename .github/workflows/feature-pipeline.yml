@@ -2,14 +2,14 @@ name: Feature branch pipeline
 on:
   push:
     branches:
-      - "feature/**"
+      - "dev"
     paths-ignore:
-      - ".github/workflows/**"
+      - ".github/**"
   pull_request:
     branches:
-      - "feature/**"
+      - "dev"
     paths-ignore:
-      - ".github/workflows/**"
+      - ".github/**"
   workflow_dispatch:
 
 jobs:

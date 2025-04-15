@@ -4,28 +4,37 @@ on:
     branches:
       - "dev"
     paths-ignore:
-      - ".github/workflows/**"
+      - ".github/**"
   pull_request:
     branches:
       - "dev"
     paths-ignore:
-      - ".github/workflows/**"
+      - ".github/**"
   workflow_dispatch:
 
 jobs:
   security-assessment:
-    uses: ./.github/workflows/security-assessment-template.yml
+    uses: ./.github/templates/security-assessment.yml
     secrets:
       GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
   SAST-assessment:
     needs: [security-assessment]
-    uses: ./.github/workflows/SAST-assessment-template.yml
+    uses: ./.github/templates/SAST-assessment.yml
     with:
       SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  build-image:
+    needs: [SAST-assessment]
+    uses: ./.github/templates/build-image.yml
+    with:
+      CONTAINER_REGISTRY_REPO: ${{ vars.CONTAINER_REGISTRY_REPO }}
+    secrets:
+      CONTAINER_REGISTRY_USERNAME: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
+  
 
   # build-push-scan:
   #   uses: ./.github/workflows/build-push-scan-template.yml

