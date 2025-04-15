@@ -1,4 +1,4 @@
-name: Code quality check assesment
+name: SAST assesment
 on:
   workflow_call:
     inputs:
@@ -11,7 +11,7 @@ on:
         description: "Sonarqube token to check code quality"
         required: true
 jobs:
-  code-quality-assesment:
+  SAST-assesment:
     name: Sonarqube Scan
     runs-on: [self-hosted, notes-api-demo]
     steps:
