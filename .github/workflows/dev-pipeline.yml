@@ -27,9 +27,9 @@ jobs:
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  build-image:
+  build-scan-image:
     needs: [SAST-assessment]
-    uses: astrearider/gh-workflows/.github/workflows/build-image.yml@master
+    uses: astrearider/gh-workflows/.github/workflows/build-scan-image.yml@master
     with:
       CONTAINER_REGISTRY_REPO: ${{ vars.CONTAINER_REGISTRY_REPO }}
       CONTAINER_LATEST_TAG: ${{ vars.CONTAINER_LATEST_TAG }}
@@ -37,16 +37,15 @@ jobs:
     secrets:
       CONTAINER_REGISTRY_USERNAME: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
 
-  scan-image:
-    needs: [build-image]
-    uses: astrearider/gh-workflows/.github/workflows/scan-image.yml@master
-    with:
-      CONTAINER_REGISTRY_REPO: ${{ vars.CONTAINER_REGISTRY_REPO }}
-      CONTAINER_LATEST_TAG: ${{ vars.CONTAINER_LATEST_TAG }}
-      RUNNER_LABEL: ${{ vars.RUNNER_LABEL }}
-    secrets:
-      # inherit: true
-      CONTAINER_REGISTRY_USERNAME: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
+  # scan-image:
+  #   needs: [build-image]
+  #   uses: astrearider/gh-workflows/.github/workflows/scan-image.yml@master
+  #   with:
+  #     CONTAINER_REGISTRY_REPO: ${{ vars.CONTAINER_REGISTRY_REPO }}
+  #     CONTAINER_LATEST_TAG: ${{ vars.CONTAINER_LATEST_TAG }}
+  #     RUNNER_LABEL: ${{ vars.RUNNER_LABEL }}
+  #   secrets:
+  #     CONTAINER_REGISTRY_USERNAME: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
 
 
 
