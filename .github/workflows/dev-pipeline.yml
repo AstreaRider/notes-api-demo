@@ -13,13 +13,20 @@ on:
   workflow_dispatch:
 
 jobs:
-  SAST-assessment:
-    uses: astrearider/gh-workflows/.github/workflows/sonarqube-scan.yml@master
+  # SAST-assessment:
+  #   uses: astrearider/gh-workflows/.github/workflows/sonarqube-scan.yml@master
+  #   with:
+  #     SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+  #     RUNNER_LABELS: '"self-hosted", "ubuntu"'
+  #   secrets:
+  #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  synk-scan:
+    uses: astrearider/gh-workflows/.github/workflows/snyk-scan.yml@master
     with:
-      SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
-      RUNNER_LABELS: '"self-hosted", "ubuntu"'
+      RUNNER_LABELS: '"ubuntu-latest"'
     secrets:
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
   # security-assessment:
   #   uses: astrearider/gh-workflows/.github/workflows/security-assessment.yml@master
