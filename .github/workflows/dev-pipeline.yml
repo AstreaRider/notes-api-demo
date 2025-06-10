@@ -12,6 +12,10 @@ on:
       - ".github/**"
   workflow_dispatch:
 
+permissions:
+  security-events: write
+  contents: read
+
 jobs:
   # SAST-assessment:
   #   uses: astrearider/gh-workflows/.github/workflows/sonarqube-scan.yml@master
