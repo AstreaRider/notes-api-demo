@@ -37,13 +37,18 @@ jobs:
   #   with:
   #     RUNNER_LABELS: '"ubuntu-latest"'
     
-  gitguardian-scan:
-    uses: astrearider/gh-workflows/.github/workflows/gitguardian-scan.yml@master
+  # gitguardian-scan:
+  #   uses: astrearider/gh-workflows/.github/workflows/gitguardian-scan.yml@master
+  #   with:
+  #     RUNNER_LABELS: '"ubuntu-latest"'
+  #   secrets:
+  #     GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
+
+  gofmt:
+    uses: astrearider/gh-workflows/.github/workflows/gofmt.yml@master
     with:
       RUNNER_LABELS: '"ubuntu-latest"'
-    secrets:
-      GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
-
+      
   # security-assessment:
   #   uses: astrearider/gh-workflows/.github/workflows/security-assessment.yml@master
   #   secrets:
