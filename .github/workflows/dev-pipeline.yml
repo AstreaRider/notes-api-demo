@@ -3,8 +3,8 @@ on:
   push:
     branches:
       - "dev"
-    paths-ignore:
-      - ".github/**"
+    # paths-ignore:
+    #   - ".github/**"
   pull_request:
     branches:
       - "dev"
@@ -25,12 +25,18 @@ jobs:
   #   secrets:
   #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  synk-scan:
-    uses: astrearider/gh-workflows/.github/workflows/snyk-scan.yml@master
+  # synk-scan:
+  #   uses: astrearider/gh-workflows/.github/workflows/snyk-scan.yml@master
+  #   with:
+  #     RUNNER_LABELS: '"ubuntu-latest"'
+  #   secrets:
+  #     SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+  gosec-scan:
+    uses: astrearider/gh-workflows/.github/workflows/gosec-scan.yml@master
     with:
       RUNNER_LABELS: '"ubuntu-latest"'
-    secrets:
-      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+    
 
   # security-assessment:
   #   uses: astrearider/gh-workflows/.github/workflows/security-assessment.yml@master
