@@ -16,24 +16,24 @@ func setupDatabaseTest() {
 	os.Setenv("DB_PORT", "5432")
 }
 
-func TestConnectDB(t *testing.T ) {
+func TestConnectDB(t *testing.T) {
 	err := godotenv.Load("../.env")
-		if err != nil {
-			t.Fatalf("Error loading .env file: %v", err)
-		}
+	if err != nil {
+		t.Fatalf("Error loading .env file: %v", err)
+	}
 
 	database.ConnectDB()
 	if database.DB == nil {
-        t.Fatal("Expected DB to be initialized, but it is nil")
-    }
+		t.Fatal("Expected DB to be initialized, but it is nil")
+	}
 
-    sqlDB, err := database.DB.DB()
-    if err != nil {
-        t.Fatalf("Failed to get sql.DB: %v", err)
-    }
+	sqlDB, err := database.DB.DB()
+	if err != nil {
+		t.Fatalf("Failed to get sql.DB: %v", err)
+	}
 
-    err = sqlDB.Ping()
-    if err != nil {
-        t.Fatalf("Failed to ping the database: %v", err)
-    }
+	err = sqlDB.Ping()
+	if err != nil {
+		t.Fatalf("Failed to ping the database: %v", err)
+	}
 }

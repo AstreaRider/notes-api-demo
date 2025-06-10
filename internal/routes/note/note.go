@@ -5,7 +5,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func SetupNoteRoutes(router fiber.Router)  {
+func SetupNoteRoutes(router fiber.Router) {
 	note := router.Group("note")
 
 	note.Post("/", noteHandler.CreateNotes)

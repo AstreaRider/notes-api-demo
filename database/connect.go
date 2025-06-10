@@ -13,7 +13,7 @@ import (
 
 var DB *gorm.DB
 
-func ConnectDB()  {
+func ConnectDB() {
 	var err error
 	p := config.Config("DB_PORT")
 	port, err := strconv.ParseUint(p, 10, 32)
