@@ -44,11 +44,18 @@ jobs:
   #   secrets:
   #     GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
 
-  gofmt:
-    uses: astrearider/gh-workflows/.github/workflows/gofmt.yml@master
-    with:
-      RUNNER_LABELS: '"ubuntu-latest"'
+  # gofmt:
+  #   uses: astrearider/gh-workflows/.github/workflows/gofmt.yml@master
+  #   with:
+  #     RUNNER_LABELS: '"ubuntu-latest"'
       
+  docker-build:
+    uses: astrearider/gh-workflows/.github/workflows/container-build.yml@master
+    with:
+      RUNNER_LABELS: '"self-hosted", "ubuntu"'
+      CONTAINER_REGISTRY_REPO: ${{ vars.CONTAINER_REGISTRY_REPO }}
+      CONTAINER_LATEST_TAG: ${{ vars.CONTAINER_LATEST_TAG }}
+    
   # security-assessment:
   #   uses: astrearider/gh-workflows/.github/workflows/security-assessment.yml@master
   #   secrets:
