@@ -53,9 +53,9 @@ jobs:
     uses: astrearider/gh-workflows/.github/workflows/container-build.yml@master
     with:
       RUNNER_LABELS: '"self-hosted", "ubuntu"'
-      CONTAINER_REGISTRY_URL: ${{ vars.CONTAINER_REGISTRY_URL }}
       CONTAINER_LATEST_TAG: ${{ vars.CONTAINER_LATEST_TAG }}
-    
+    secrets:
+      CONTAINER_REGISTRY_URL: ${{ vars.CONTAINER_REGISTRY_URL }}
   # security-assessment:
   #   uses: astrearider/gh-workflows/.github/workflows/security-assessment.yml@master
   #   secrets:
