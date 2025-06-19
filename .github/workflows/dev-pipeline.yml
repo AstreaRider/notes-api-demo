@@ -60,7 +60,7 @@ jobs:
     uses: astrearider/gh-workflows/.github/workflows/sign-image.yml@master
     with:
       RUNNER_LABELS: '"self-hosted", "ubuntu"'
-      IMAGE_TAG: ${{ needs.docker-build.outputs.tags }}
+      IMAGE_TAGS: ${{ needs.docker-build.outputs.tags }}
       IMAGE_DIGEST: ${{ needs.docker-build.outputs.digest }}
     secrets:
       COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
