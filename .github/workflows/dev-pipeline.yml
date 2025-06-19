@@ -57,6 +57,7 @@ jobs:
       CONTAINER_REGISTRY_URL: ${{ secrets.CONTAINER_REGISTRY_URL }}
 
   sign-image:
+    needs: docker-build
     uses: astrearider/gh-workflows/.github/workflows/sign-image.yml@master
     with:
       RUNNER_LABELS: '"self-hosted", "ubuntu"'
