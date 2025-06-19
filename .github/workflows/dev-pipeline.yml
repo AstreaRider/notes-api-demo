@@ -58,14 +58,20 @@ jobs:
 
   sign-image:
     needs: docker-build
-    uses: astrearider/gh-workflows/.github/workflows/sign-image.yml@master
-    with:
-      RUNNER_LABELS: '"self-hosted", "ubuntu"'
-      IMAGE_TAGS: ${{ needs.docker-build.outputs.tags }}
-      IMAGE_DIGEST: ${{ needs.docker-build.outputs.digest }}
-    secrets:
-      COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
-      COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_KEY }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: test outputs
+        run: | 
+          echo "Tags: ${{ needs.docker-build.outputs.tags }}"
+          echo "Digest: ${{ needs.docker-build.outputs.digest }}"
+    # uses: astrearider/gh-workflows/.github/workflows/sign-image.yml@master
+    # with:
+    #   RUNNER_LABELS: '"self-hosted", "ubuntu"'
+    #   IMAGE_TAGS: ${{ needs.docker-build.outputs.tags }}
+    #   IMAGE_DIGEST: ${{ needs.docker-build.outputs.digest }}
+    # secrets:
+    #   COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+    #   COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_KEY }}
   # security-assessment:
   #   uses: astrearider/gh-workflows/.github/workflows/security-assessment.yml@master
   #   secrets:
