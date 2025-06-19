@@ -50,7 +50,6 @@ jobs:
   #     RUNNER_LABELS: '"ubuntu-latest"'
       
   docker-build:
-    id: docker-build
     uses: astrearider/gh-workflows/.github/workflows/container-build.yml@master
     with:
       RUNNER_LABELS: '"self-hosted", "ubuntu"'
@@ -62,8 +61,8 @@ jobs:
     uses: astrearider/gh-workflows/.github/workflows/sign-image.yml@master
     with:
       RUNNER_LABELS: '"self-hosted", "ubuntu"'
-      IMAGE_TAGS: ${{ steps.docker-build.outputs.tags }}
-      IMAGE_DIGEST: ${{ steps.docker-build.outputs.digest }}
+      IMAGE_TAGS: ${{ needs.docker-build.outputs.tags }}
+      IMAGE_DIGEST: ${{ needs.docker-build.outputs.digest }}
     secrets:
       COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
       COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_KEY }}
