@@ -55,6 +55,16 @@ jobs:
       RUNNER_LABELS: '"self-hosted", "ubuntu"'
     secrets:
       CONTAINER_REGISTRY_URL: ${{ secrets.CONTAINER_REGISTRY_URL }}
+
+  sign-image:
+    uses: astrearider/gh-workflows/.github/workflows/sign-image.yml@master
+    with:
+      RUNNER_LABELS: '"self-hosted", "ubuntu"'
+      IMAGE_TAG: ${{ needs.docker-build.outputs.tags }}
+      IMAGE_DIGEST: ${{ needs.docker-build.outputs.digest }}
+    secrets:
+      COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+      COSIGN_KEY: ${{ secrets.COSIGN_KEY }}
   # security-assessment:
   #   uses: astrearider/gh-workflows/.github/workflows/security-assessment.yml@master
   #   secrets:
