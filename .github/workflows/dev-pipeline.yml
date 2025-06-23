@@ -57,6 +57,7 @@ jobs:
       CONTAINER_REGISTRY_URL: ${{ secrets.CONTAINER_REGISTRY_URL }}
 
   test-variables:
+    needs: docker-build
     runs-on: ubuntu-latest
     steps:
       - name: Test outputs
