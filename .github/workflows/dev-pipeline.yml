@@ -50,17 +50,11 @@ jobs:
   #     RUNNER_LABELS: '"ubuntu-latest"'
       
   docker-build:
-    outputs:
-      tags: ${{ steps.build.outputs.tags }}
-      digest: ${{ steps.build.outputs.digest }}
-    steps:
-      - name: Build a container image
-        id: build
-        uses: astrearider/gh-workflows/.github/actions/docker-build@master
-        with:
-          RUNNER_LABELS: '"self-hosted", "ubuntu"'
-        secrets:
-          CONTAINER_REGISTRY_URL: ${{ secrets.CONTAINER_REGISTRY_URL }}
+    uses: astrearider/gh-workflows/.github/workflows/container-build.yml@master
+    with:
+      RUNNER_LABELS: '"self-hosted", "ubuntu"'
+    secrets:
+      CONTAINER_REGISTRY_URL: ${{ secrets.CONTAINER_REGISTRY_URL }}
 
   sign-image:
     needs: docker-build
