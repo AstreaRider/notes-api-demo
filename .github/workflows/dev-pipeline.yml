@@ -60,6 +60,9 @@ jobs:
     needs: docker-build
     runs-on: ubuntu-latest
     steps:
+      - name: Test tumbal variables
+        run: |
+          echo "${{ needs.docker-build.outputs.test_variable }}"
       - name: Dump raw tags
         run: |
           echo "===== TAGS ====="
