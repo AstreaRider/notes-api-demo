@@ -64,6 +64,10 @@ jobs:
         run: | 
           echo "Tags: ${{ needs.docker-build.outputs.tags }}"
           echo "Digest: ${{ needs.docker-build.outputs.digest }}"
+      - name: Dump all outputs
+        run: |
+          echo "Full output:"
+          echo "${{ toJson(needs.docker-build.outputs) }}"
     # uses: astrearider/gh-workflows/.github/workflows/sign-image.yml@master
     # with:
     #   RUNNER_LABELS: '"self-hosted", "ubuntu"'
