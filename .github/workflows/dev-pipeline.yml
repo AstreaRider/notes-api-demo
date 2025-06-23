@@ -60,14 +60,12 @@ jobs:
     needs: docker-build
     runs-on: ubuntu-latest
     steps:
-      - name: Test outputs
-        run: | 
-          echo "Tags: ${{ needs.docker-build.outputs.tags }}"
-          echo "Digest: ${{ needs.docker-build.outputs.labels }}"
-      - name: Dump all outputs
+      - name: Dump raw tags
         run: |
-          echo "Full output:"
-          echo "${{ toJson(needs.docker-build.outputs) }}"
+          echo "===== TAGS ====="
+          echo "${{ needs.docker-build.outputs.tags }}" | tr ',' '\n'
+          echo "===== LABELS ====="
+          echo "${{ needs.docker-build.outputs.labels }}" | tr ',' '\n'
 
   # sign-image:
   #   needs: docker-build
