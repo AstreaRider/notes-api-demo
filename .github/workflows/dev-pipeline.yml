@@ -56,18 +56,30 @@ jobs:
     secrets:
       CONTAINER_REGISTRY_URL: ${{ secrets.CONTAINER_REGISTRY_URL }}
 
-  sign-image:
-    needs: docker-build
+  test-variables:
     runs-on: ubuntu-latest
     steps:
-      - name: test outputs
+      - name: Test outputs
         run: | 
           echo "Tags: ${{ needs.docker-build.outputs.tags }}"
-          echo "Digest: ${{ needs.docker-build.outputs.digest }}"
+          echo "Digest: ${{ needs.docker-build.outputs.labels }}"
       - name: Dump all outputs
         run: |
           echo "Full output:"
           echo "${{ toJson(needs.docker-build.outputs) }}"
+
+  # sign-image:
+  #   needs: docker-build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: test outputs
+  #       run: | 
+  #         echo "Tags: ${{ needs.docker-build.outputs.tags }}"
+  #         echo "Digest: ${{ needs.docker-build.outputs.digest }}"
+  #     - name: Dump all outputs
+  #       run: |
+  #         echo "Full output:"
+  #         echo "${{ toJson(needs.docker-build.outputs) }}"
     # uses: astrearider/gh-workflows/.github/workflows/sign-image.yml@master
     # with:
     #   RUNNER_LABELS: '"self-hosted", "ubuntu"'
