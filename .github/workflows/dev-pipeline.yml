@@ -52,7 +52,7 @@ jobs:
   docker-build:
     uses: astrearider/gh-workflows/.github/workflows/container-build.yml@master
     with:
-      RUNNER_LABELS: '"ubuntu-latest"'
+      RUNNER_LABELS: '"ubuntu-latest", "ubuntu"'
     secrets:
       CONTAINER_REGISTRY_URL: ${{ secrets.CONTAINER_REGISTRY_URL }}
 
@@ -60,15 +60,12 @@ jobs:
     needs: docker-build
     runs-on: ubuntu-latest
     steps:
-      - name: Test tumbal variables
+      - name: Debugging variables
         run: |
-          echo "${{ needs.docker-build.outputs.test_variable }}"
-      - name: Dump raw tags
-        run: |
-          echo "===== TAGS ====="
-          echo "${{ needs.docker-build.outputs.tags }}" | tr ',' '\n'
-          echo "===== LABELS ====="
-          echo "${{ needs.docker-build.outputs.labels }}" | tr ',' '\n'
+          echo "this is tags"
+          echo "${{ needs.docker-build.outputs.tags }}"
+          echo "this is labels"
+          echo "${{ needs.docker-build.outputs.labels }}"
 
   # sign-image:
   #   needs: docker-build
