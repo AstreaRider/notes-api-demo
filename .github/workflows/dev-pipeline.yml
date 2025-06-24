@@ -49,24 +49,26 @@ jobs:
   #   with:
   #     RUNNER_LABELS: '"ubuntu-latest"'
       
-  docker-build:
-    uses: astrearider/gh-workflows/.github/workflows/container-build.yml@master
+  container-build-push:
+    uses: astrearider/gh-workflows/.github/workflows/container-build-push.yml@master
     with:
       RUNNER_LABELS: '"self-hosted", "ubuntu"'
     secrets:
       CONTAINER_REGISTRY_URL: ${{ secrets.CONTAINER_REGISTRY_URL }}
+      CONTAINER_REGISTRY_USERNAME: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
+      CONTAINER_REGISTRY_PASSWORD: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
 
-  test-variables:
-    needs: docker-build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Debugging variables
-        run: |
-          echo "this is tags"
-          echo "${{ needs.docker-build.outputs.tags }}"
-          echo "this is labels"
-          echo "${{ needs.docker-build.outputs.labels }}"
-
+  sign-image:
+    needs: container-build-push
+    uses: astrearider/gh-workflows/.github/workflows/sign-image.yml@master
+    with:
+      RUNNER_LABELS: '"ubuntu-latest"''
+      IMAGE_TAGS: ${{ needs.container-build-push.outputs.tags }}
+      IMAGE_DIGEST: ${{ needs.container-build-push.outputs.digest }}
+    secrets:
+      COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+      COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_KEY }}
+  
   # sign-image:
   #   needs: docker-build
   #   runs-on: ubuntu-latest
