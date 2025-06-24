@@ -62,7 +62,7 @@ jobs:
     needs: container-build-push
     uses: astrearider/gh-workflows/.github/workflows/sign-image.yml@master
     with:
-      RUNNER_LABELS: '"ubuntu-latest"''
+      RUNNER_LABELS: '"ubuntu-latest"'
       IMAGE_TAGS: ${{ needs.container-build-push.outputs.tags }}
       IMAGE_DIGEST: ${{ needs.container-build-push.outputs.digest }}
     secrets:
