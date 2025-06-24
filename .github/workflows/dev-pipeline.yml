@@ -52,7 +52,7 @@ jobs:
   docker-build:
     uses: astrearider/gh-workflows/.github/workflows/container-build.yml@master
     with:
-      RUNNER_LABELS: '"self-hosted", "ubuntu"'
+      RUNNER_LABELS: '"ubuntu-latest"'
     secrets:
       CONTAINER_REGISTRY_URL: ${{ secrets.CONTAINER_REGISTRY_URL }}
 
