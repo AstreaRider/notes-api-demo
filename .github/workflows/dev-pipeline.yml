@@ -71,14 +71,14 @@ jobs:
   #         echo "${{ needs.docker-build.outputs.labels }}" | tr ',' '\n'
 
   trivy-fs:
-  runs-on: ubuntu-latest
-  steps:
-    - name: Run Trivy scanner without cache
-      uses: aquasecurity/trivy-action@0.28.0
-      with:
-        scan-type: 'fs'
-        scan-ref: '.'
-        cache: 'false'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Trivy scanner without cache
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          cache: 'false'
 
   # sign-image:
   #   needs: docker-build
