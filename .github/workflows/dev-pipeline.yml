@@ -48,27 +48,36 @@ jobs:
   #   uses: astrearider/gh-workflows/.github/workflows/gofmt.yml@master
   #   with:
   #     RUNNER_LABELS: '"ubuntu-latest"'
-      
-  docker-build:
-    uses: astrearider/gh-workflows/.github/workflows/container-build.yml@master
-    with:
-      RUNNER_LABELS: '"self-hosted", "ubuntu"'
-    secrets:
-      CONTAINER_REGISTRY_URL: ${{ secrets.CONTAINER_REGISTRY_URL }}
 
-  test-variables:
-    needs: docker-build
+  trivy-fs:
     runs-on: ubuntu-latest
     steps:
-      - name: Test tumbal variables
-        run: |
-          echo "${{ needs.docker-build.outputs.test_variable }}"
-      - name: Dump raw tags
-        run: |
-          echo "===== TAGS ====="
-          echo "${{ needs.docker-build.outputs.tags }}" | tr ',' '\n'
-          echo "===== LABELS ====="
-          echo "${{ needs.docker-build.outputs.labels }}" | tr ',' '\n'
+      - name: Run Trivy scanner without cache
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          cache: 'false'  
+  # docker-build:
+  #   uses: astrearider/gh-workflows/.github/workflows/container-build.yml@master
+  #   with:
+  #     RUNNER_LABELS: '"self-hosted", "ubuntu"'
+  #   secrets:
+  #     CONTAINER_REGISTRY_URL: ${{ secrets.CONTAINER_REGISTRY_URL }}
+
+  # test-variables:
+  #   needs: docker-build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Test tumbal variables
+  #       run: |
+  #         echo "${{ needs.docker-build.outputs.test_variable }}"
+  #     - name: Dump raw tags
+  #       run: |
+  #         echo "===== TAGS ====="
+  #         echo "${{ needs.docker-build.outputs.tags }}" | tr ',' '\n'
+  #         echo "===== LABELS ====="
+  #         echo "${{ needs.docker-build.outputs.labels }}" | tr ',' '\n'
 
   # sign-image:
   #   needs: docker-build
