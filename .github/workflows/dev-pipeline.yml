@@ -51,7 +51,7 @@ jobs:
 
   build-push-scan:
     uses: ./.github/workflows/build-push-scan-template.yml
-    needs: [security-assessment]
+    needs: [SAST-assessment]
     with:
       CONTAINER_REGISTRY_REPO: ${{ vars.CONTAINER_REGISTRY_REPO }}
       CONTAINER_LATEST_TAG: ${{ vars.CONTAINER_LATEST_TAG }}
