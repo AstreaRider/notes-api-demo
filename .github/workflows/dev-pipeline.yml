@@ -50,7 +50,7 @@ jobs:
       RUNNER_LABELS: '"ubuntu-latest"'
 
   build-push-scan:
-    uses: ./.github/workflows/build-push-scan-template.yml
+    uses: ./.github/workflows/build-push-scan-image.yml
     needs: [SAST-assessment]
     with:
       CONTAINER_REGISTRY_REPO: ${{ vars.CONTAINER_REGISTRY_REPO }}
