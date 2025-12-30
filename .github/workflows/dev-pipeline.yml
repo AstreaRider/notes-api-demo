@@ -17,37 +17,48 @@ permissions:
   contents: read
 
 jobs:
-  # SAST-assessment:
-  #   uses: astrearider/gh-workflows/.github/workflows/sonarqube-scan.yml@master
-  #   with:
-  #     SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
-  #     RUNNER_LABELS: '"self-hosted", "ubuntu"'
-  #   secrets:
-  #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  SAST-assessment:
+    uses: astrearider/gh-workflows/.github/workflows/sonarqube-scan.yml@master
+    with:
+      SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+      RUNNER_LABELS: ${{ vars.RUNNER_LABELS }}
+    secrets:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  # synk-scan:
-  #   uses: astrearider/gh-workflows/.github/workflows/snyk-scan.yml@master
-  #   with:
-  #     RUNNER_LABELS: '"ubuntu-latest"'
-  #   secrets:
-  #     SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  synk-scan:
+    uses: astrearider/gh-workflows/.github/workflows/snyk-scan.yml@master
+    with:
+      RUNNER_LABELS: '"ubuntu-latest"'
+    secrets:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-  # gosec-scan:
-  #   uses: astrearider/gh-workflows/.github/workflows/gosec-scan.yml@master
-  #   with:
-  #     RUNNER_LABELS: '"ubuntu-latest"'
+  gosec-scan:
+    uses: astrearider/gh-workflows/.github/workflows/gosec-scan.yml@master
+    with:
+      RUNNER_LABELS: '"ubuntu-latest"'
     
-  # gitguardian-scan:
-  #   uses: astrearider/gh-workflows/.github/workflows/gitguardian-scan.yml@master
-  #   with:
-  #     RUNNER_LABELS: '"ubuntu-latest"'
-  #   secrets:
-  #     GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
+  gitguardian-scan:
+    uses: astrearider/gh-workflows/.github/workflows/gitguardian-scan.yml@master
+    with:
+      RUNNER_LABELS: '"ubuntu-latest"'
+    secrets:
+      GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
 
-  # gofmt:
-  #   uses: astrearider/gh-workflows/.github/workflows/gofmt.yml@master
-  #   with:
-  #     RUNNER_LABELS: '"ubuntu-latest"'
+  gofmt:
+    uses: astrearider/gh-workflows/.github/workflows/gofmt.yml@master
+    with:
+      RUNNER_LABELS: '"ubuntu-latest"'
+
+  build-push-scan:
+    uses: ./.github/workflows/build-push-scan-template.yml
+    needs: [security-assessment]
+    with:
+      CONTAINER_REGISTRY_REPO: ${{ vars.CONTAINER_REGISTRY_REPO }}
+      CONTAINER_LATEST_TAG: ${{ vars.CONTAINER_LATEST_TAG }}
+      RUNNER_LABELS: ${{ vars.RUNNER_LABELS }}
+    secrets:
+      CONTAINER_REGISTRY_USERNAME: ${{ secrets.CONTAINER_REGISTRY_USERNAME }}
+      CONTAINER_REGISTRY_PASSWORD: ${{ secrets.CONTAINER_REGISTRY_PASSWORD }}
       
   # docker-build:
   #   uses: astrearider/gh-workflows/.github/workflows/container-build.yml@master
@@ -70,22 +81,22 @@ jobs:
   #         echo "===== LABELS ====="
   #         echo "${{ needs.docker-build.outputs.labels }}" | tr ',' '\n'
 
-  trivy-scan:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Build an image from Dockerfile
-        run: docker build -t notes-api-demo:${{ github.sha }} .
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.28.0
-        with:
-          image-ref: 'notes-api-demo:${{ github.sha }}'
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
+  # trivy-scan:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #     - name: Build an image from Dockerfile
+  #       run: docker build -t notes-api-demo:${{ github.sha }} .
+  #     - name: Run Trivy vulnerability scanner
+  #       uses: aquasecurity/trivy-action@0.28.0
+  #       with:
+  #         image-ref: 'notes-api-demo:${{ github.sha }}'
+  #         format: 'table'
+  #         exit-code: '1'
+  #         ignore-unfixed: true
+  #         vuln-type: 'os,library'
+  #         severity: 'CRITICAL,HIGH'
 
   # sign-image:
   #   needs: docker-build
